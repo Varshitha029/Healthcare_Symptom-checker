@@ -1,78 +1,209 @@
-# 🏥 Healthcare Symptom Checker (Educational)
 
-An AI-powered web application that provides educational symptom analysis using Groq's ultra-fast LLM inference. **Important: This is for educational purposes only and not a substitute for professional medical advice.**
 
-![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Groq](https://img.shields.io/badge/Groq-00FF00?style=for-the-badge&logo=ai&logoColor=black)
-![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)
+# 🩺 Healthcare Symptom Checker (Educational)
+
+An **AI-powered educational tool** that analyzes user-entered symptoms and provides **possible conditions**, **confidence levels**, and **recommended next steps** — powered by **Groq LLMs** (LLaMA 3 and Mixtral).
+
+> ⚠️ **Disclaimer:** This tool is for **educational purposes only**. It is **not a substitute** for professional medical advice, diagnosis, or treatment.
+
+---
 
 ## 📋 Table of Contents
-- [Features](#-features)
-- [Quick Start](#-quick-start)
-- [Project Structure](#-project-structure)
-- [Setup Instructions](#-setup-instructions)
-- [Supported AI Models](#-supported-ai-models)
-- [Database Schema](#-database-schema)
-- [Technical Architecture](#-technical-architecture)
-- [Critical Safety Information](#-critical-safety-information)
-- [Environment Setup](#-environment-setup)
-- [Deployment](#-deployment)
-- [Features in Detail](#-features-in-detail)
-- [Troubleshooting](#-troubleshooting)
-- [API Reference](#-api-reference)
-- [Contributing](#-contributing)
-- [License](#-license)
+
+* [About](#about)
+* [Features](#features)
+* [Demo](#demo)
+* [Technologies Used](#technologies-used)
+* [Installation & Setup](#installation--setup)
+* [Configuration (API Key Setup)](#configuration-api-key-setup)
+* [Usage](#usage)
+* [Database & History](#database--history)
+* [Project Structure](#project-structure)
+* [Safety Notes](#safety-notes)
+* [Author](#author)
+* [License](#license)
+
+---
+
+## 💡 About
+
+The **Healthcare Symptom Checker** is a lightweight Streamlit web app that allows users to describe their symptoms in natural language.
+It uses **Groq’s large language models (LLaMA 3 / Mixtral)** to generate structured, readable summaries including:
+
+* Possible conditions
+* Confidence estimates
+* Recommended next steps
+* Safety warnings and follow-up suggestions
+
+All responses are stored locally in an SQLite database for later reference.
+
+---
 
 ## ✨ Features
 
-### 🤖 AI-Powered Capabilities
-- **Intelligent Symptom Analysis**: Uses advanced LLM models to understand symptom patterns
-- **Multiple Model Support**: Choose from different Groq AI models based on needs
-- **Real-time Processing**: Get responses in 2-5 seconds with Groq's LPU inference engine
-- **Contextual Understanding**: AI comprehends symptom duration, severity, and patterns
+* 🧠 **AI-driven symptom analysis** using Groq API
+* 💾 **Local history storage** with SQLite
+* ⚙️ **Model selection** (LLaMA 3, Mixtral)
+* 📜 **CSV export** of symptom history
+* 🔒 **Secure API key handling**
+* 🧩 **Single-file deployment (app.py)**
 
-### 🔒 Data Privacy & Security
-- **Local-First Architecture**: All data stored locally on user's machine
-- **No Cloud Storage**: Personal health information never leaves your computer
-- **Encrypted API Communication**: Secure connections to Groq servers
-- **Data Ownership**: Users have complete control over their data
+---
 
-### 📊 Data Management
-- **Complete History Tracking**: Automatic saving of all queries with timestamps
-- **CSV Export**: Download entire symptom history for personal records
-- **Searchable Database**: Easy navigation through past queries
-- **Persistent Storage**: Data remains available across application restarts
+## 🧰 Technologies Used
 
-### 🎯 Safety & Compliance
-- **Emergency Detection**: Automatic flagging of critical symptoms
-- **Clear Disclaimers**: Prominent educational purpose statements
-- **Professional Guidance**: Always recommends consulting healthcare providers
-- **No Medical Advice**: Strictly avoids prescriptions and diagnoses
+| **Technology**    | **Purpose**       | **Description**                                            |
+| ----------------- | ----------------- | ---------------------------------------------------------- |
+| **Python 3.9+**   | Core language     | Main programming language used for backend and logic       |
+| **Streamlit**     | Web framework     | Builds the interactive web app UI                          |
+| **Groq API**      | AI Model API      | Provides access to LLaMA 3 and Mixtral models for analysis |
+| **SQLite3**       | Database          | Stores user queries and model responses locally            |
+| **Pandas**        | Data processing   | Handles tabular data, exports CSV files                    |
+| **python-dotenv** | Config management | Loads API keys and environment variables securely          |
+| **datetime**      | Time handling     | Timestamps query records                                   |
+| **os / time**     | System utilities  | File and environment management                            |
+| **typing**        | Type hinting      | Improves readability and maintainability                   |
 
-## 🚀 Quick Start
+---
 
-### Prerequisites
-- **Python 3.8** or higher
-- **Groq API Account** ([Get free API key here](https://console.groq.com/))
-- **Web Browser** (Chrome, Firefox, Safari, or Edge)
-- **1GB** free disk space
+## ⚙️ Installation & Setup
 
-### 5-Minute Setup
+### 1️⃣ Clone the repository
+
 ```bash
-# 1. Clone repository
-git clone https://github.com/yourusername/healthcare-symptom-checker.git
-cd healthcare-symptom-checker
+git clone https://github.com/your-username/symptom-checker.git
+cd symptom-checker
+```
 
-# 2. Create virtual environment
+### 2️⃣ Create and activate a virtual environment
+
+```bash
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+source venv/bin/activate   # On Windows: venv\Scripts\activate
+```
 
-# 3. Install dependencies
+### 3️⃣ Install dependencies
+
+Create a file named `requirements.txt` with the following content:
+
+```
+streamlit
+pandas
+sqlite3
+groq
+python-dotenv
+```
+
+Then install:
+
+```bash
 pip install -r requirements.txt
+```
 
-# 4. Set API key
+---
+
+## 🔑 Configuration (API Key Setup)
+
+You must set your **Groq API key** before running the app.
+
+### Option A – Environment Variable
+
+```bash
+# macOS/Linux
 export GROQ_API_KEY="your_actual_groq_api_key_here"
 
-# 5. Launch application
+# Windows (CMD)
+set GROQ_API_KEY=your_actual_groq_api_key_here
+```
+
+### Option B – Streamlit Secrets (Recommended for deployment)
+
+Create `.streamlit/secrets.toml`:
+
+```toml
+GROQ_API_KEY = "your_actual_groq_api_key_here"
+```
+
+### Option C – .env File (for local dev)
+
+Create a `.env` file:
+
+```
+GROQ_API_KEY=your_actual_groq_api_key_here
+```
+
+---
+
+## ▶️ Usage
+
+Run the Streamlit app:
+
+```bash
 streamlit run app.py
+```
+
+Then open the local URL displayed in your terminal (usually `http://localhost:8501`).
+
+### Steps:
+
+1. Enter your symptoms in plain English
+2. Click **"Analyze symptoms"**
+3. View the AI-generated results and recommendations
+4. Check or export your history
+
+---
+
+## 💽 Database & History
+
+All interactions are stored locally in `symptom_checker_history.db` under the table **queries**:
+
+| Column        | Type    | Description                   |
+| ------------- | ------- | ----------------------------- |
+| id            | INTEGER | Auto-incrementing primary key |
+| timestamp     | TEXT    | UTC timestamp of query        |
+| symptoms      | TEXT    | User input                    |
+| response_text | TEXT    | Model-generated analysis      |
+
+You can view, filter, or export your past entries directly from the Streamlit UI.
+
+---
+
+## 🧱 Project Structure
+
+```
+symptom-checker/
+│
+├── app.py                      # Main Streamlit application
+├── requirements.txt            # Project dependencies
+├── symptom_checker_history.db  # Local SQLite database (auto-created)
+├── .streamlit/
+│   └── secrets.toml            # (Optional) Streamlit secrets
+├── .env                        # (Optional) Environment variables
+└── README.md                   # Documentation
+```
+
+---
+
+## ⚕️ Safety Notes
+
+* This tool **does not provide medical diagnoses**.
+* For **emergency symptoms** such as:
+
+  * Chest pain
+  * Severe breathing difficulty
+  * Heavy bleeding
+  * Unconsciousness
+  * Sudden weakness, confusion, or vision loss
+    👉 **Call your local emergency number immediately.**
+
+Always seek professional medical care for concerning or worsening symptoms.
+
+---
+
+## 👩‍💻 Author
+
+**Developed by:** [Varshitha Rajaram]
+🎓 Aspiring Software Engineer | 💡 Passionate about AI, Healthcare Tech & Educational Apps
+
+If you found this project helpful, feel free to ⭐ star it or fork it on GitHub!
+
